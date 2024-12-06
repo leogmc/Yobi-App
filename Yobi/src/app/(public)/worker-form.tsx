@@ -22,11 +22,13 @@ import {
   import { useAuth} from '@clerk/clerk-expo';
   import { doc, setDoc } from 'firebase/firestore';
   import { db } from '@/firebase-config';
+  import * as SecureStore from 'expo-secure-store'
   
   export default function WorkerFormScreen() {
   
     const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
-    const { userId, isSignedIn } = useAuth();
+    const { userId, isSignedIn, signOut } = useAuth();
+
   
     // Esquema de validação Yup
     const SignupSchema = Yup.object().shape({
@@ -52,6 +54,7 @@ import {
       resume: string;
       profession: string;
       profilePhoto?: string;
+      role: string;
     }
 
     async function saveWorkerDetails(userId: string, data: WorkerFormValues) {
@@ -108,11 +111,16 @@ import {
         });
     
         alert('Cadastro realizado com sucesso!');
-        router.replace('/(auth)/services'); // Redireciona após o cadastro
+        router.navigate("/(auth)/services");
+        
       } catch (error) {
         console.error('Erro ao salvar os dados:', error);
         alert('Houve um erro ao cadastrar. Tente novamente.');
       }
+    };
+
+    function goToLogin (){ 
+        signOut();    
     };
     
   
@@ -131,6 +139,7 @@ import {
               phone: '',
               resume: '',
               profession: '',
+              role: 'worker'
             }}
             validationSchema={SignupSchema}
             onSubmit={handleRegister}
@@ -216,7 +225,7 @@ import {
             )}
           </Formik>
   
-          <Pressable onPress={() => router.replace('/(public)/login')}>
+          <Pressable onPress={() => goToLogin()}>
             <Text>Faça o login</Text>
           </Pressable>
         </FormContainer>

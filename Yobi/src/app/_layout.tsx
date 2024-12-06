@@ -5,6 +5,8 @@ import { ClerkProvider, useAuth} from '@clerk/clerk-expo'
 import { Slot, useRouter, useSegments } from 'expo-router';
 import * as SecureStore from 'expo-secure-store'
 import { fetchWorkerDetails } from '@/src/utils/fetchWorkerDetails';
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase-config";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -44,10 +46,9 @@ const tokenCache = {
 
 
 const InitialLayout = () => {
-  const { isLoaded, isSignedIn, userId } = useAuth(); // Aqui os hooks são permitidos
+  const { isLoaded, isSignedIn, userId } = useAuth();
   const segments = useSegments();
   const router = useRouter();
-  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
     async function redirectBasedOnRole() {
@@ -55,46 +56,68 @@ const InitialLayout = () => {
 
       console.log("User loaded:", isSignedIn);
 
-      const userRole = await SecureStore.getItemAsync("user_role");
       const inAuthGroup = segments[0] === "(auth)";
 
       if (isSignedIn && !inAuthGroup) {
-        if (userRole === "worker") {
-          // Verifica os dados do trabalhador
-          try {
-            if (!userId) {
-              console.error("User ID is null or undefined!");
-              router.replace("/(public)/auth"); // Ou outra página de fallback
-              return;
-            }
+        if (!userId) {
+          console.error("User ID is null or undefined!");
+          router.replace("/(public)/auth"); // Ou outra página de fallback
+          return;
+        }
 
-            const workerData = await fetchWorkerDetails(userId);
+        try {
+          console.log("Entrou no try-catch");
 
-            if (workerData) {
-              // Dados existem, redireciona para serviços
+          // Buscar os detalhes do usuário do Firestore
+          const userDocRef = doc(db, "users", userId);
+          const userDocSnap = await getDoc(userDocRef);
+
+          // Buscar os detalhes do trabalhador do Firestore
+          const workerDocRef = doc(db, "workers", userId);
+          const workerDocSnap = await getDoc(workerDocRef);
+
+          const userData = userDocSnap.data();
+          console.log("User data fetched:", userData?.role);
+
+          const workerData = workerDocSnap.data();
+          console.log("Worker data fetched:", workerData?.role);
+
+          if (userData?.role === "common") {
+            // Redirecionar para a rota "/(auth)/stores" se o papel for "common"
+            router.replace("/(auth)/stores");
+            return;
+
+          } else if (workerData?.role === "worker") {
+            // Verificar os dados do trabalhador
+            const workerDetails = await fetchWorkerDetails(userId);
+            console.log("Dados do trabalhador carregados do firebase: ", workerDetails)
+
+            if (workerDetails) {
+              // Dados do trabalhador existem, redirecionar para serviços
               router.replace("/(auth)/services");
             } else {
-              // Sem dados, redireciona para formulário
+              // Sem dados, redirecionar para o formulário
               router.replace("/(public)/worker-form");
             }
-          } catch (error) {
-            console.error("Erro ao verificar dados do trabalhador:", error);
-            alert("Houve um erro ao verificar seus dados. Tente novamente.");
+          } else {
+            console.log("Ocorreu um erro. O que foi carregado da role: ", workerData);
           }
-        } else {
-          // Redireciona para outra página se não for trabalhador
-          router.replace("/(auth)/stores");
+        } catch (error) {
+          console.error("Erro ao buscar ou processar dados do usuário:", error);
+          alert("Houve um erro ao verificar seus dados. Tente novamente.");
         }
       } else if (!isSignedIn) {
+        console.log("Entrou no ultimo else...")
         router.replace("/(public)/auth");
       }
     }
 
     redirectBasedOnRole();
-  }, [isSignedIn, isLoaded, userId]); // Adicione `userId` às dependências
+  }, [isSignedIn, isLoaded, userId]);
 
   return <Slot />;
 };
+
 
 
 export default function RootLayout() {

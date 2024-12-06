@@ -2,13 +2,16 @@ import { useAuth } from "@clerk/clerk-expo";
 import { Feather } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { Pressable } from "react-native";
+import * as SecureStore from 'expo-secure-store'
 
 function LogoutButton(){
   const {signOut} = useAuth();
 
   function logout(){
     signOut();
+
   }
+  
   return(
     <Pressable onPress={logout}>
       <Feather name="log-out" size={24} color="#FFF"/>
