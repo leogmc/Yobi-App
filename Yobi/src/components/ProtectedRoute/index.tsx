@@ -1,6 +1,6 @@
 import { useEffect, ReactNode } from 'react';
 import { useRouter } from 'expo-router';
-import { useAuth } from '@/src/state/authContext';
+import { useAuth } from '@/src/hooks/ctx';
 
 type Props = {
   children: ReactNode;

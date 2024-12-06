@@ -1,9 +1,16 @@
-import * as React from 'react';
-import * as SplashScreen from 'expo-splash-screen';
-import AuthScreen from './auth/auth';
+import { ActivityIndicator, View } from "react-native";
 
-SplashScreen.preventAutoHideAsync(); 
-
-export default function App() {
-  return <AuthScreen />;
+export default function Index() {
+    return (
+        <View
+            style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
+         <ActivityIndicator size={40} color={"#121212"}/>
+            
+        </View>
+    );
 }

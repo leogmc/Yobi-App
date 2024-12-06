@@ -3,7 +3,7 @@ import { Container, Greeting } from './styles';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather } from '@expo/vector-icons';
-import { useAuth } from '@/src/state/authContext';
+import { useAuth } from '@/src/hooks/ctx';
 import { Pressable } from 'react-native';
 
 export default function GreetingHeader() {
