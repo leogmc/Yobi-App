@@ -12,15 +12,15 @@ export const Container = styled.TouchableOpacity`
     
 `;
 
-export const InputTask = styled.TextInput`
-    padding-left:16px;
+export const InputChat = styled.TextInput`
+    padding:16px;
     font-family: 'Inter-Regular';
     font-size: 14px;
     width: 80%
     
 `
 
-export const SearchTaskButton = styled.TouchableOpacity`
+export const SearchChatButton = styled.TouchableOpacity`
     display: flex;
     align-items: center;
     justify-content: center;

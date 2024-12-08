@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, View, StyleSheet } from 'react-native';
 import { Label, InputWrapper, Text } from './auth.styles';
 import { useState } from 'react';
 import GoBackButton from '@/src/components/GoBackButton';
@@ -7,7 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { FormContainer, FormView, InputForm, Logo, Title, Subtitle, SubscribeButton, ForgotButton } from './user-register.style';
-import { useAuth, useSignUp } from '@clerk/clerk-expo';
+import { useSignUp } from '@clerk/clerk-expo';
 import { router } from 'expo-router';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/firebase-config';
@@ -17,9 +17,12 @@ export default function UserRegisterScreen() {
   const [pendingEmailCode, setPendingEmailCode] = useState(false);
   const [code, setCode] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [name, setName] = useState(""); // Armazena o nome do usuário
 
   // Esquema de validação Yup
   const SignupSchema = Yup.object().shape({
+    name: Yup.string()
+      .required('O nome não pode ser vazio.'),
     email: Yup.string()
       .email('Insira um email válido.')
       .required('O email não pode ser vazio.'),
@@ -31,6 +34,7 @@ export default function UserRegisterScreen() {
   });
 
   interface SignUpFormValues {
+    name: string;
     email: string;
     password: string;
     role: string;
@@ -38,7 +42,6 @@ export default function UserRegisterScreen() {
 
   // Salvar dados do usuário no Firestore
   async function saveUserDetails(userId: any, data: Omit<SignUpFormValues, 'password'>) {
-    console.log('Tentando salvar dados:', data);
 
     try {
       await setDoc(doc(db, 'users', userId), {
@@ -53,11 +56,13 @@ export default function UserRegisterScreen() {
 
   // Função para lidar com o signup
   async function handleSignup(values: SignUpFormValues) {
-    console.log('HandleRegister chamado com:', values);
 
     if (!isLoaded) return;
 
     try {
+      // Armazena o nome do usuário para uso posterior
+      setName(values.name);
+
       // Cria o usuário no Clerk
       await signUp.create({
         emailAddress: values.email,
@@ -89,12 +94,12 @@ export default function UserRegisterScreen() {
 
       // Salva os dados no Firestore
       await saveUserDetails(userId, {
+        name: name, // Usa o nome armazenado
         email: signUp.emailAddress || '',
         role: 'common',
       });
 
       alert('Conta ativada com sucesso!');
-
     } catch (e) {
       console.log(e);
     }
@@ -112,14 +117,25 @@ export default function UserRegisterScreen() {
       <Title>Inscreva-se</Title>
 
       <Formik
-        initialValues={{ email: '', password: '', role: 'common' }}
+        initialValues={{ name: '', email: '', password: '', role: 'common' }}
         validationSchema={SignupSchema}
         onSubmit={handleSignup}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
           <FormView>
             {!pendingEmailCode && (
-              <View>
+              <View style={styles.container}>
+                <Label>Digite seu nome:</Label>
+                <InputForm
+                  placeholder="Digite seu nome:"
+                  value={values.name}
+                  onChangeText={handleChange("name")}
+                  onBlur={handleBlur("name")}
+                />
+                {touched.name && errors.name && (
+                  <Text style={{ color: '#ff7777' }}>{errors.name}</Text>
+                )}
+
                 <Label>Digite seu e-mail:</Label>
                 <InputForm
                   placeholder="Digite seu e-mail:"
@@ -186,3 +202,10 @@ export default function UserRegisterScreen() {
     </FormContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+
+    alignItems: 'center',
+  },
+});

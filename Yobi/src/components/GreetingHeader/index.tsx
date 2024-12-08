@@ -1,35 +1,31 @@
 import * as React from 'react';
-import { Container, Greeting } from './styles';
-import { useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Feather } from '@expo/vector-icons';
-import { useAuth } from '@/src/hooks/ctx';
-import { Pressable } from 'react-native';
+import { Container, Greeting, Greetings, ProfilePhoto, SubGreeting } from './styles';
+import { useUser } from '@/src/hooks/UserContext';
+import { Text } from 'react-native';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 export default function GreetingHeader() {
+  const { userData, workerData, isLoading, error } = useUser();
 
-  const { logout } = useAuth();
-  const [nickname, setNickname] = useState('');
+  if (isLoading) {
+    return <Text>Carregando...</Text>;
+  }
 
-  useEffect(() => {
-    const loadNickname = async () => {
-      const storedNickname = await AsyncStorage.getItem('userNickname');
-      if (storedNickname) {
-        setNickname(storedNickname);
-      }
-    };
+  if (error) {
+    return <Text>{error}</Text>;
+  }
 
-    loadNickname();
-  }, []);
-    
+  const activeData = workerData ?? userData;
+
   return (
-    
     <Container>
-        <Greeting>Olá, {nickname}!</Greeting>
-        <Pressable onPress={logout}>
-          <Feather name="log-out" size={24} color="#8A5ED1"/>
-        </Pressable>
+      <Greetings>
+        <Greeting>{activeData?.name}</Greeting>
+        <SubGreeting> Bem-vindo de volta!</SubGreeting>
+      </Greetings>
+      <ProfilePhoto>
+        <FontAwesome6 name="user-tie" color="#34495E" size={24} />
+      </ProfilePhoto>
     </Container>
-    
   );
 }

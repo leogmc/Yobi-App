@@ -11,10 +11,10 @@ export async function fetchWorkerDetails(userId: string) {
       return docSnap.data();
     } else {
       console.log('No worker data found!');
-      return null; // Sem dados
+      return null; 
     }
   } catch (error) {
     console.error('Error fetching worker details:', error);
-    throw error; // Propaga erro se necessário
+    throw error; 
   }
 }

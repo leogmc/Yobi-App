@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Container, Title, Subtitle, Logo, LogoContainer, CardContainer } from './register.style';
 import { UserProfileCard } from '@/src/components/UserProfileCard';
 import { WorkerProfileCard } from '@/src/components/WorkerProfileCard';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Pressable } from 'react-native';
 
 
@@ -11,12 +11,10 @@ export default function Register() {
   const router = useRouter();
 
   const goToUserSignUp = () => {
-    console.log("Clicado!");
       router.push('/(public)/user-register');   
   };
 
   const goToWorkerSignUp = () => {
-    console.log("Clicado!");
       router.push('/(public)/worker-register');   
   };
 

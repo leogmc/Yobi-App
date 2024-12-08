@@ -1,4 +1,7 @@
-import styled from "styled-components/native";
+import styled, { css } from "styled-components/native";
+import { Dimensions } from "react-native";
+
+const { width } = Dimensions.get("window");
 
 export const Container = styled.View`
     flex: 1;
@@ -55,6 +58,10 @@ export const Subtitle = styled.Text`
     font-family:'Inter-Regular';
     font-size: 16px;
     text-align: center;
+
+    ${({ theme }) => width > 400 && css`
+    font-size: 14px;
+  `}
 `;
 
 export const Label = styled.Text`

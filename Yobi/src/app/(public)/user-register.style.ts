@@ -8,9 +8,19 @@ export const Logo = styled.Image.attrs({
     margin: 8px;
   `;
 
+
+export const FormContainer = styled.View`
+    flex: 1;
+    align-items: center;
+    justify-content:center;
+    gap: 8px;
+    padding: 24px;
+
+`;
+
 export const InputForm = styled.TextInput`
     
-    padding:16px;
+    padding-left:16px;
     font-family: 'Inter-Regular';
     font-size: 14px;
     height: 52px;
@@ -42,16 +52,6 @@ export const Subtitle = styled.Text`
 `;
 
 
-
-
-export const FormContainer = styled.View`
-    flex: 1;
-    align-items: center;
-    justify-content:center;
-    gap: 8px;
-    padding: 24px;
-
-`;
 
 export const FormView = styled.View`
     display: flex;

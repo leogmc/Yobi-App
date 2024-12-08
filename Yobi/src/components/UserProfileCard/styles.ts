@@ -1,4 +1,7 @@
-import styled from "styled-components/native";
+import styled, { css } from "styled-components/native";
+import { Dimensions } from "react-native";
+
+const { width } = Dimensions.get("window");
 
 
 export const UserIcon = styled.Image.attrs({
@@ -14,6 +17,11 @@ export const Title = styled.Text`
     font-family:'Inter-Bold';
     font-size: 16px;
     padding: 4px;
+
+
+    ${({ theme }) => width > 400 && css`
+    font-size: 14px;
+  `}
 `;
 
 export const Subtitle = styled.Text`
@@ -21,6 +29,11 @@ export const Subtitle = styled.Text`
     font-family:'Inter-Regular';
     font-size: 16px;
     text-align: center;
+
+
+    ${({ theme }) => width > 400 && css`
+    font-size: 14px;
+  `}
 `;
 
 export const Container = styled.TouchableOpacity`

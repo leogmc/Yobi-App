@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import { Container, SearchTaskButton, InputTask } from './styles';
 
 type Props = {
@@ -11,14 +11,16 @@ export function SearchBar({onPress, onChangeText, value} : Props){
     return (
     <Container>
         <InputTask 
-            placeholder='Buscar tarefa:'
+            placeholder='Busque pelo nome da empresa: '
             keyboardType='default'
             value={value}
-            onChangeText={onChangeText}>           
+            onChangeText={onChangeText}
+            >           
         </InputTask>
         <SearchTaskButton onPress={onPress}>
-            <Feather name="search" size={24} color="#8A5ED1"/>
+            <FontAwesome name="search" size={24} color="#34495E"/>
         </SearchTaskButton>
     </Container>
     );
 }
+

@@ -4,8 +4,13 @@ export default function Discard() {
   return (
     <Stack
     screenOptions={{
-      headerStyle: { backgroundColor: "#121212" },
-      headerTintColor: "#FFF",
+      headerShown: false,
+      headerStyle: { backgroundColor: "#f2f2f2" },
+      headerTintColor: "#34495E",
+      headerShadowVisible: false,
+      headerTitle: "",
+      headerBackTitle: "Voltar",
+     
     }}
   />
 );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { ClerkProvider, useAuth} from '@clerk/clerk-expo'
@@ -7,6 +7,8 @@ import * as SecureStore from 'expo-secure-store'
 import { fetchWorkerDetails } from '@/src/utils/fetchWorkerDetails';
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebase-config";
+import { UserProvider } from "../hooks/UserContext"; 
+
 
 SplashScreen.preventAutoHideAsync();
 
@@ -54,8 +56,6 @@ const InitialLayout = () => {
     async function redirectBasedOnRole() {
       if (!isLoaded) return;
 
-      console.log("User loaded:", isSignedIn);
-
       const inAuthGroup = segments[0] === "(auth)";
 
       if (isSignedIn && !inAuthGroup) {
@@ -66,7 +66,6 @@ const InitialLayout = () => {
         }
 
         try {
-          console.log("Entrou no try-catch");
 
           // Buscar os detalhes do usuário do Firestore
           const userDocRef = doc(db, "users", userId);
@@ -77,10 +76,8 @@ const InitialLayout = () => {
           const workerDocSnap = await getDoc(workerDocRef);
 
           const userData = userDocSnap.data();
-          console.log("User data fetched:", userData?.role);
-
           const workerData = workerDocSnap.data();
-          console.log("Worker data fetched:", workerData?.role);
+       
 
           if (userData?.role === "common") {
             // Redirecionar para a rota "/(auth)/stores" se o papel for "common"
@@ -90,7 +87,6 @@ const InitialLayout = () => {
           } else if (workerData?.role === "worker") {
             // Verificar os dados do trabalhador
             const workerDetails = await fetchWorkerDetails(userId);
-            console.log("Dados do trabalhador carregados do firebase: ", workerDetails)
 
             if (workerDetails) {
               // Dados do trabalhador existem, redirecionar para serviços
@@ -107,7 +103,6 @@ const InitialLayout = () => {
           alert("Houve um erro ao verificar seus dados. Tente novamente.");
         }
       } else if (!isSignedIn) {
-        console.log("Entrou no ultimo else...")
         router.replace("/(public)/auth");
       }
     }
@@ -148,7 +143,9 @@ export default function RootLayout() {
 
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-        <InitialLayout />     
+      <UserProvider>
+        <InitialLayout />
+      </UserProvider>  
     </ClerkProvider>
   )
 }

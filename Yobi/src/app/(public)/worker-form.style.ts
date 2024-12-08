@@ -10,7 +10,7 @@ export const Logo = styled.Image.attrs({
 
 export const InputForm = styled.TextInput`
     
-    padding:16px;
+    padding-left:16px;
     font-family: 'Inter-Regular';
     font-size: 14px;
     height: 52px;
@@ -22,7 +22,7 @@ export const InputForm = styled.TextInput`
     padding-right: 40px;
     width: 100%;
     gap: 16px;
-    /* background-color: #FFFFFF; */
+    color: white;
 
 `;
 
@@ -61,6 +61,7 @@ export const SubscribeButton = styled.Text`
     padding: 12px 100px;
     justify-content: center;
     align-items: center;
+    align-self: center;
     gap: 10px;
     flex-shrink: 0;
     border-radius: 6px;

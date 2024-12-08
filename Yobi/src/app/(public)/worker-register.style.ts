@@ -10,7 +10,7 @@ export const Logo = styled.Image.attrs({
 
 export const InputForm = styled.TextInput`
     
-    padding:16px;
+    padding-left:16px;
     font-family: 'Inter-Regular';
     font-size: 14px;
     height: 52px;

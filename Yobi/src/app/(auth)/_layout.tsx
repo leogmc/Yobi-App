@@ -1,47 +1,50 @@
 import { useAuth } from "@clerk/clerk-expo";
-import { Feather } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { Pressable } from "react-native";
-import * as SecureStore from 'expo-secure-store'
+import { Button } from "./styles";
 
-function LogoutButton(){
-  const {signOut} = useAuth();
+function LogoutButton() {
+  const { signOut } = useAuth();
 
-  function logout(){
+  function logout() {
     signOut();
-
   }
-  
-  return(
+
+  return (
     <Pressable onPress={logout}>
-      <Feather name="log-out" size={24} color="#FFF"/>
+      <Button>
+        <FontAwesome name="sign-out" size={24} color="#EBF5FF" />
+      </Button>
     </Pressable>
-  )
+  );
 }
 
-
 export default function AuthLayout() {
-
-  const {isSignedIn} = useAuth();
+  const { isSignedIn } = useAuth();
 
   return (
     <Tabs
       screenOptions={{
-        headerStyle:{
-          backgroundColor: "#121212"
+        headerStyle: {
+          backgroundColor: "#34495E",
         },
-        headerTintColor: "#FFF",
-        headerRight: () => <LogoutButton/>,
-        tabBarStyle: { backgroundColor: "#574545" },
+        headerTintColor: "#EBF5FF",
+        headerRight: () => <LogoutButton />,
+        tabBarStyle: { backgroundColor: "#34495E" },
+        tabBarActiveTintColor: "#34495E", // Cor do ícone ativo
+        tabBarInactiveTintColor: "#EBF5FF", // Cor do ícone inativo
+        tabBarActiveBackgroundColor: "#EBF5FF", // Background da aba ativa
+        tabBarInactiveBackgroundColor: "#34495E", // Background da aba inativa
       }}
     >
       <Tabs.Screen
         name="chatbot"
         options={{
           headerTitle: "Chatbot",
-          tabBarLabel: "Chat",
+          tabBarLabel: "Chatbot",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="message-circle" color={color} size={size} />
+            <FontAwesome name="comments" color={color} size={size} />
           ),
         }}
         redirect={!isSignedIn}
@@ -52,7 +55,7 @@ export default function AuthLayout() {
           headerTitle: "Lojas",
           tabBarLabel: "Lojas",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="home" color={color} size={size} />
+            <FontAwesome6 name="store" color={color} size={size} />
           ),
         }}
         redirect={!isSignedIn}
@@ -63,7 +66,7 @@ export default function AuthLayout() {
           headerTitle: "Serviços",
           tabBarLabel: "Serviços",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="heart" color={color} size={size} />
+            <FontAwesome6 name="handshake-simple" color={color} size={size} />
           ),
         }}
         redirect={!isSignedIn}
@@ -74,7 +77,7 @@ export default function AuthLayout() {
           headerTitle: "Sustentabilidade",
           tabBarLabel: "Descarte",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="truck" color={color} size={size} />
+            <FontAwesome name="leaf" color={color} size={size} />
           ),
         }}
         redirect={!isSignedIn}
@@ -82,5 +85,3 @@ export default function AuthLayout() {
     </Tabs>
   );
 }
-
-

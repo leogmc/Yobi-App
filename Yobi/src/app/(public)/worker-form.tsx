@@ -22,7 +22,6 @@ import {
   import { useAuth} from '@clerk/clerk-expo';
   import { doc, setDoc } from 'firebase/firestore';
   import { db } from '@/firebase-config';
-  import * as SecureStore from 'expo-secure-store'
   
   export default function WorkerFormScreen() {
   
@@ -61,9 +60,6 @@ import {
 
       if (!isSignedIn) return
 
-      console.log('Tentando salvar dados:', data); 
-      console.log('User ID:', userId);
-
       try {
         await setDoc(doc(db, 'workers', userId), {
           ...data,
@@ -95,9 +91,6 @@ import {
     };
   
     const handleRegister = async (values: WorkerFormValues) => {
-      console.log('HandleRegister chamado com:', values); // Verifique se isso aparece no console
-
-      console.log('User ID:', userId); // Verifique o que aparece aqui
     
       if (!userId) {
         console.error('Usuário não autenticado!');
@@ -179,10 +172,10 @@ import {
                     placeholder="Selecione:"
                   >
             
-                    <Picker.Item label="Pedreiro" value="pedreiro" />
-                    <Picker.Item label="Marceneiro" value="marceneiro" />
-                    <Picker.Item label="Pintor" value="pintor" />
-                    <Picker.Item label="Eletricista" value="eletricista" />
+                    <Picker.Item label="Pedreiro" value="Pedreiro" />
+                    <Picker.Item label="Marceneiro" value="Marceneiro" />
+                    <Picker.Item label="Pintor" value="Pintor" />
+                    <Picker.Item label="Eletricista" value="Eletricista" />
                   </Picker>
                 </View>
                   {touched.profession && errors.profession && <Text style={{ color: '#ff7777' }}>{errors.profession}</Text>}
@@ -218,7 +211,7 @@ import {
                 />
                 {touched.resume && errors.resume && <Text style={{ color: '#ff7777' }}>{errors.resume}</Text>}
   
-                <Pressable onPress={() => handleSubmit()}>
+                <Pressable style={styles.button} onPress={() => handleSubmit()}>
                   <SubscribeButton>Cadastrar</SubscribeButton>
                 </Pressable>
               </FormView>
@@ -236,11 +229,15 @@ import {
   const styles = StyleSheet.create({
     pickerContainer: {
       borderWidth: 2, // Define a espessura da borda
+      color: "#FFFFFF",
       borderColor: '#FFF', // Cor da borda
       borderRadius: 8, // Bordas arredondadas (opcional)
       paddingHorizontal: 10, // Espaçamento interno para o Picker não encostar na borda
-      marginVertical: 10, // Espaçamento externo (opcional)
+      marginVertical: 10, // Espaçamento externo (opcional),
     },
+    button: {
+      marginTop: 10
+    }
   });
   
   
