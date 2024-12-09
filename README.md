@@ -52,11 +52,13 @@ cd Yobi
 
 3. Instale as dependências:
 
-npm install
+- npm install
+- npm install expo
 
-4. Inicie a aplicação?
 
-npx expo start
+4. Inicie a aplicação:
+
+- npx expo start
 
 ## Uso:
 
